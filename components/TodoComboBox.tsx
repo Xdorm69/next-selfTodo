@@ -20,7 +20,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ToggleStatus } from "@/app/actions/toggle-status";
 import { toast } from "sonner";
 
-const Options = [
+type OptionsType = {
+    value: "completed" | "pending";
+    label: string;
+}
+
+const Options: OptionsType[] = [
   {
     value: "completed",
     label: "Completed",
@@ -35,7 +40,7 @@ export function TodoComboBox({ value, id }: { value: string; id: string }) {
   const queryClient = useQueryClient();
   const ToggleMutation = useMutation({
     mutationKey: ["toggle"],
-    mutationFn: ({id, command}: {id: string, command: string}) => {
+    mutationFn: ({id, command}: {id: string, command: "pending" | "completed"}) => {
       toast.loading("status is being changed", { id: "status" });
       return ToggleStatus(id, command);
     },
@@ -52,7 +57,7 @@ export function TodoComboBox({ value, id }: { value: string; id: string }) {
     },
   });
 
-  const handleMutation = async (id: string, command: string) => {
+  const handleMutation = async (id: string, command: "completed" | "pending") => {
     try {
       await ToggleMutation.mutateAsync({id, command});
     } catch (error) {

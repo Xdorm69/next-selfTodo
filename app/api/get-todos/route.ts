@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/DbConnect"
-import { NextRequest, NextResponse } from "next/server"
+import { NextResponse } from "next/server"
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   const todos = await prisma.todos.findMany();
   return todos.length > 0 ? NextResponse.json(todos) : NextResponse.json([]);
 }

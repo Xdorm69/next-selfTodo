@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import { TodoCard } from "./TodoCard";
 import CardComp from "./CardComp";
 import TotalTodoCard from "./TotalTodoCard";
 import Image from "next/image";

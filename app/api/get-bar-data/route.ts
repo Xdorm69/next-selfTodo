@@ -1,9 +1,9 @@
 import { TodoType } from "@/components/AllTodos";
 import { prisma } from "@/lib/DbConnect";
 import { currentUser } from "@clerk/nextjs/server";
-import { NextRequest, NextResponse } from "next/server";
+import {  NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   const user = await currentUser();
   if (!user) {
     return NextResponse.json([

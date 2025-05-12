@@ -4,13 +4,13 @@ import { prisma } from "@/lib/DbConnect";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
-export async function ToggleStatus(id: string, command:string) {
+export async function ToggleStatus(id: string, command:"pending" | 'completed') {
   const user = await currentUser();
   if (!user) {
     redirect("/sign-in");
   }
 
-  const res = await prisma.$transaction(async (tx) => {
+  await prisma.$transaction(async (tx) => {
     const todo = await tx.todos.findFirst({
       where: {
         userId: user.id,

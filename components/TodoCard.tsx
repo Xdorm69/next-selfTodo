@@ -10,7 +10,6 @@ import {
 } from "./ui/card";
 import { TodoComboBox } from "./TodoComboBox";
 import { Button } from "./ui/button";
-import { useState } from "react";
 import { ConfirmTodoDelete } from "./ConfirmTodoDelete";
 
 export const TodoCard = ({ i }: { i: TodoType }) => {

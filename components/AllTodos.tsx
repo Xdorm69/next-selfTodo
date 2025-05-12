@@ -12,7 +12,7 @@ import { Button } from "./ui/button";
 import SkeletonWrapper from "./SkeletonWrapper";
 import { Skeleton } from "./ui/skeleton";
 import { TodoCard } from "./TodoCard";
-import { motion, Variants, AnimatePresence } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 
 export type TodoType = {
   id: string;
@@ -23,12 +23,22 @@ export type TodoType = {
   status: "pending" | "completed";
 };
 
-const GetApiCall = async () => {
+const GetApiCall = async (): Promise<TodoType[] | undefined> => {
   try {
-    const res = await fetch("/api/get-todos").then((res) => res.json());
-    if (res) return res;
-  } catch (error: any) {
-    console.log(error.message);
+    const response = await fetch("/api/get-todos");
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const res: TodoType[] = await response.json();
+    return res;
+  } catch (error) {
+    console.error(
+      "Error fetching todos:",
+      error instanceof Error ? error.message : error
+    );
+    return undefined;
   }
 };
 
@@ -134,7 +144,7 @@ const AllTodos = ({ len }: { len?: number }) => {
       <div className="mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {dataToRender.map((i: TodoType, index: number) => (
           <motion.div
-          className="rounded-xl"
+            className="rounded-xl"
             whileHover={{
               scale: 1.05,
               transition: {
@@ -142,9 +152,7 @@ const AllTodos = ({ len }: { len?: number }) => {
                 stiffness: 300,
                 damping: 15,
               },
-
             }}
-
             key={i.id}
             variants={animVars}
             initial="initial"
