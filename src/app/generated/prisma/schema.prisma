@@ -10,15 +10,21 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_CON_DATABASE_URL")
+}
+
+enum Status {
+  pending
+  completed
 }
 
 model Todos {
-  id        String   @id @default(uuid())
-  title     String
-  desc      String
-  userId    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  userId      String
+  status      Status   @default(pending)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
 }

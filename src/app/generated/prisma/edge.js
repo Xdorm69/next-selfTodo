@@ -86,6 +86,9 @@ Prisma.NullTypes = {
  * Enums
  */
 exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
+  ReadUncommitted: 'ReadUncommitted',
+  ReadCommitted: 'ReadCommitted',
+  RepeatableRead: 'RepeatableRead',
   Serializable: 'Serializable'
 });
 
@@ -102,6 +105,11 @@ exports.Prisma.TodosScalarFieldEnum = {
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
 };
 exports.Status = exports.$Enums.Status = {
   pending: 'pending',
@@ -140,7 +148,7 @@ const config = {
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
+    "rootEnvPath": "../../../../.env",
     "schemaEnvPath": "../../../../.env"
   },
   "relativePath": "../../../../prisma",
@@ -149,18 +157,18 @@ const config = {
   "datasourceNames": [
     "db"
   ],
-  "activeProvider": "sqlite",
+  "activeProvider": "postgresql",
   "inlineDatasources": {
     "db": {
       "url": {
-        "fromEnvVar": null,
-        "value": "file:dev.db"
+        "fromEnvVar": "DATABASE_CON_DATABASE_URL",
+        "value": "prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiZWRjNjcyYTMtOTE5MS00ZjcxLTkyMWEtMWYxZjJiOTNmOTI3IiwidGVuYW50X2lkIjoiOThiZjE0NmRkYTA5ZjgyNmU0ODE1YzdkZjQ4YzBmOTkwMDAzMjVkYzQ3YmVmOTI0NjY2MjE3YWU4ZjI0NjRiZSIsImludGVybmFsX3NlY3JldCI6IjkzYzdlMGFlLTdjM2EtNGM0Mi04OWRlLTkxNWMxMDU1MTZkZSJ9.jHqXjNU9npsZgcDMYNowLnEjZ3LyQ3PGR8fKeYBKe2A"
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/app/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n  url      = \"file:dev.db\"\n}\n\nenum Status {\n  pending\n  completed\n}\n\nmodel Todos {\n  id          String   @id @default(uuid())\n  title       String\n  description String\n  userId      String\n  status      Status   @default(pending)\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @default(now())\n}\n",
-  "inlineSchemaHash": "9bba0fba05b40ff078ac65bd63101df6c55395689ee0f233ce381069eceff7d0",
-  "copyEngine": true
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/app/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_CON_DATABASE_URL\")\n}\n\nenum Status {\n  pending\n  completed\n}\n\nmodel Todos {\n  id          String   @id @default(uuid())\n  title       String\n  description String\n  userId      String\n  status      Status   @default(pending)\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @default(now())\n}\n",
+  "inlineSchemaHash": "d49024bdeeead39ec105297ccff95c895df5964f0955cf1e06c5ecafdea11ae4",
+  "copyEngine": false
 }
 config.dirname = '/'
 
@@ -170,7 +178,9 @@ config.engineWasm = undefined
 config.compilerWasm = undefined
 
 config.injectableEdgeEnv = () => ({
-  parsed: {}
+  parsed: {
+    DATABASE_CON_DATABASE_URL: typeof globalThis !== 'undefined' && globalThis['DATABASE_CON_DATABASE_URL'] || typeof process !== 'undefined' && process.env && process.env.DATABASE_CON_DATABASE_URL || undefined
+  }
 })
 
 if (typeof globalThis !== 'undefined' && globalThis['DEBUG'] || typeof process !== 'undefined' && process.env && process.env.DEBUG || undefined) {
