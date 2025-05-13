@@ -2,8 +2,9 @@
 "use server";
 
 import { prisma } from "@/lib/DbConnect";
+import { DEMO_TODOS } from "@/lib/constants";
 import { currentUser } from "@clerk/nextjs/server";
-import { DEMO_TODOS } from "../api/get-todos/route";
+
 
 export async function getTodoStats() {
   const user = await currentUser();
