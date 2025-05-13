@@ -29,12 +29,8 @@ const TotalTodoCard = () => {
     return (
       <Card className="relative overflow-hidden rounded-xl border border-transparent backdrop-blur-sm shadow-lg h-full flex flex-col justify-between">
         <CardHeader>
-          <CardTitle>
-            <Skeleton className="h-[30px] w-1/2" />
-          </CardTitle>
-          <CardDescription>
-            <Skeleton className="h-[20px] w-1/3" />
-          </CardDescription>
+          <CardTitle className="text-2xl">Todo Statistics</CardTitle>
+          <CardDescription className="text-sm">Total Todoz</CardDescription>
         </CardHeader>
         <CardContent className="flex items-center justify-center">
           <Skeleton className="h-[60px] w-[100px]" />
@@ -76,7 +72,7 @@ const TotalTodoCard = () => {
           <h1 className="text-5xl font-bold">
             <CountUp
               from={0}
-              to={lenTodos.data?.todosLength ?? 0}
+              to={lenTodos.data?.todosLength ?? 6}
               separator=","
               direction="up"
               delay={0}

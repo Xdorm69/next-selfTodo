@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   Card,
@@ -13,41 +13,66 @@ import SkeletonWrapper from "./SkeletonWrapper";
 import { Skeleton } from "./ui/skeleton";
 import { TodoCard } from "./TodoCard";
 import { motion, Variants } from "framer-motion";
+import { CategoryCommandBox } from "./CategoryCommandBox";
+import { OrderCommand } from "./OrderCommand";
 
 export type TodoType = {
   id: string;
   title: string;
+  userId: string;
   description: string;
   createdAt: Date;
   updatedAt: Date;
   status: "pending" | "completed";
 };
 
-const GetApiCall = async (): Promise<TodoType[] | undefined> => {
-  try {
-    const response = await fetch("/api/get-todos");
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const res: TodoType[] = await response.json();
-    return res;
-  } catch (error) {
-    console.error(
-      "Error fetching todos:",
-      error instanceof Error ? error.message : error
-    );
-    return undefined;
-  }
-};
-
 const AllTodos = ({ len }: { len?: number }) => {
+  const [categoryValue, setCategoryValue] = useState("");
+  const [orderValue, setOrderValue] = useState("");
+
+  const GetApiCall = async (): Promise<TodoType[] | undefined> => {
+    try {
+      const response = await fetch(`/api/get-todos?category=${categoryValue}&order=${orderValue}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-store", // Disable caching to force fresh fetch
+      });
+
+      if (response.status === 404) {
+        console.error("API endpoint not found");
+        return undefined;
+      }
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(
+          `HTTP error! status: ${response.status}, message: ${errorText}`
+        );
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const res: TodoType[] = await response.json();
+      return res;
+    } catch (error) {
+      console.error(
+        "Error fetching todos:",
+        error instanceof Error ? error.message : error
+      );
+      return undefined;
+    }
+  };
+
   const todosQuery = useQuery({
     queryKey: ["todos"],
     queryFn: GetApiCall,
     // Add retry and error handling
     retry: 1,
+    // Refetch whenever order and category change
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,    
   });
 
   // Loading state
@@ -64,7 +89,7 @@ const AllTodos = ({ len }: { len?: number }) => {
   }
 
   // Error state or no data
-  if (todosQuery.isError || !todosQuery.data) {
+  if (todosQuery.isError) {
     // Placeholder todos for unauthenticated or error scenarios
     const placeholderTodos = Array.from({ length: len || 3 }).map(
       (_, index) => ({
@@ -76,9 +101,9 @@ const AllTodos = ({ len }: { len?: number }) => {
 
     return (
       <>
-        <h1 className="my-7 text-3xl font-semibold">
+        <div className="my-7 text-3xl flex items-center gap-2 font-semibold">
           {len ? `Recent Todos (${placeholderTodos.length})` : "All Todos"}
-        </h1>
+        </div>
         <div className="mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {placeholderTodos.map((i) => (
             <SkeletonWrapper key={i.id} isLoading={false}>
@@ -104,12 +129,9 @@ const AllTodos = ({ len }: { len?: number }) => {
   }
 
   // Determine which data to render
-  const dataToRender = len
-    ? todosQuery.data?.slice(0, len) || []
-    : todosQuery.data || [];
-
+  const dataToRender = todosQuery.data as TodoType[];
   // No todos state
-  if (dataToRender.length === 0) {
+  if (dataToRender?.length === 0) {
     return (
       <div className="text-center text-gray-500 my-7">
         {len ? `No recent todos available` : `No todos found`}
@@ -138,7 +160,17 @@ const AllTodos = ({ len }: { len?: number }) => {
   return (
     <>
       <h1 className="my-7 text-3xl font-semibold">
-        {len ? `Recent Todos (${dataToRender.length})` : "All Todos"}
+        <div>All Todos</div>
+        <div className="flex mt-2 gap-2 items-center">
+          <CategoryCommandBox
+            value={categoryValue}
+            setValue={setCategoryValue}
+          />
+          <OrderCommand value={orderValue} catVal={categoryValue} setValue={setOrderValue} />
+          <Button onClick={() => todosQuery.refetch()}>
+            Search
+          </Button>
+        </div>
       </h1>
 
       <div className="mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

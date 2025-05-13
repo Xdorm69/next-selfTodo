@@ -3,14 +3,19 @@
 
 import { prisma } from "@/lib/DbConnect";
 import { currentUser } from "@clerk/nextjs/server";
+import { DEMO_TODOS } from "../api/get-todos/route";
 
 export async function getTodoStats() {
-    const user = await currentUser();
-    if(!user){
-        return {todosLength: 0, latestTod: {updatedAt: "Not available"}};
-    }
+  const user = await currentUser();
+  if (!user) {
+    return {
+      todosLength: DEMO_TODOS.length,
+      latestTodo: DEMO_TODOS[DEMO_TODOS.length - 1],
+      userStatus: "unauthenticated",
+    };
+  }
   const todosLength = await prisma.todos.count();
-  
+
   const latestTodo =
     todosLength > 0
       ? await prisma.todos.findFirst({
@@ -20,8 +25,8 @@ export async function getTodoStats() {
         })
       : null;
 
-  return { 
-    todosLength, 
-    latestTodo 
+  return {
+    todosLength,
+    latestTodo,
   };
 }
