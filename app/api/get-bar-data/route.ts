@@ -7,8 +7,8 @@ export async function GET() {
   const user = await currentUser();
   if (!user) {
     return NextResponse.json([
-      { status: "Pending", count: 12, color: "#ff6b6b" },
-      { status: "Completed", count: 8, color: "#4ecdc4" },
+      { status: "Pending", count: 2, color: "#ff6b6b" },
+      { status: "Completed", count: 1, color: "#4ecdc4" },
     ]);
   }
   const res: TodoType[] = await prisma.todos.findMany({
