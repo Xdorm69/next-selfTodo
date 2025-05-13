@@ -15,7 +15,9 @@ const page = async () => {
         <div className="mt-4 w-full flex gap-3 justify-end">
           <AddTodo />
         </div>
-        <AllTodos />
+        <div className="w-full overflow-hidden">
+          <AllTodos />
+        </div>
       </div>
     );
   else {
@@ -31,7 +33,7 @@ const page = async () => {
           <AllTodos len={6} />
 
           <div
-            className="h-3/4 w-full absolute bottom-0 left-0 bg-gradient-to-b from-transparent to to-black backdrop-blur-sm mask"
+            className="h-3/4 w-full absolute bottom-0 left-0 bg-gradient-to-b from-transparent to overflow-x-hidden to-black backdrop-blur-sm mask"
             style={{
               maskImage: "linear-gradient(to top, black 30%, transparent)",
             }}
