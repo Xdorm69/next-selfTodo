@@ -15,6 +15,7 @@ import { TodoCard } from "./TodoCard";
 import { motion, Variants } from "framer-motion";
 import { CategoryCommandBox } from "./CategoryCommandBox";
 import { OrderCommand } from "./OrderCommand";
+import { Search } from "lucide-react";
 
 export type TodoType = {
   id: string;
@@ -168,7 +169,10 @@ const AllTodos = ({ len }: { len?: number }) => {
           />
           <OrderCommand value={orderValue} catVal={categoryValue} setValue={setOrderValue} />
           <Button onClick={() => todosQuery.refetch()}>
-            Search
+            <div className="flex gap-1 items-center">
+              <span><Search className="w-5 h-5" /></span>
+              <h1>Search</h1>
+            </div>
           </Button>
         </div>
       </h1>

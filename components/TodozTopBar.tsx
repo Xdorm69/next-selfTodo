@@ -44,6 +44,7 @@ const TodozTopBar = () => {
           src={"/0.jpg"}
           alt="hero-img"
           width={1000}
+          priority
           height={800}
           className="w-full h-full object-cover"
         />
