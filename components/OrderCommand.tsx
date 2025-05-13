@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/popover";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 type CategoryType = { value: string; label: string };
 
@@ -39,14 +40,15 @@ export function OrderCommand({
     { value: "completed", label: "Completed" },
   ];
 
-  const [Categories, setCategories] =
-    React.useState<CategoryType[]>(DEFAULT_CATEGORIES);
+  const [Categories, setCategories] = React.useState<CategoryType[]>([
+    { value: "none", label: "please select a category" },
+  ]);
 
   React.useEffect(() => {
     // Dynamically set categories based on selected category
     if (catVal === "status") {
       setCategories(STATUS_CATEGORIES);
-    } else {
+    } else if (catVal.length > 0) {
       setCategories(DEFAULT_CATEGORIES);
     }
   }, [catVal]);
@@ -75,7 +77,14 @@ export function OrderCommand({
                   key={category.value}
                   value={category.value}
                   onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
+                    if (currentValue === "none") {
+                      toast.error("Please select a category");
+                    }
+                    if (currentValue !== "none") {
+                      setValue(
+                        currentValue === value ? "" : currentValue
+                      );
+                    }
                     setOpen(false);
                   }}
                 >

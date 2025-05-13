@@ -11,6 +11,7 @@ import {
 import { TodoComboBox } from "./TodoComboBox";
 import { Button } from "./ui/button";
 import { ConfirmTodoDelete } from "./ConfirmTodoDelete";
+import AddTodo from "./AddTodo";
 
 export const TodoCard = ({ i }: { i: TodoType }) => {
     
@@ -51,12 +52,13 @@ export const TodoCard = ({ i }: { i: TodoType }) => {
         <CardFooter className="flex gap-2 w-full justify-end">
           <div className="w-fit">
             <TodoComboBox value={i.status} id={i.id} />
-            <div className="flex w-full justify-between items-center mt-3">
-              <Button variant={"ghostUp"}>Update</Button>
+            <div className="flex w-full justify-between items-center mt-3 gap-2">
+              <AddTodo data={i} />
               <ConfirmTodoDelete
               id={i.id}
                 trigger={
                   <Button
+                  className="py-5 font-semibold"
                     variant={"ghostDel"}                    
                   >
                     Delete

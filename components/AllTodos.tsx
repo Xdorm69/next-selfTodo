@@ -33,13 +33,16 @@ const AllTodos = ({ len }: { len?: number }) => {
 
   const GetApiCall = async (): Promise<TodoType[] | undefined> => {
     try {
-      const response = await fetch(`/api/get-todos?category=${categoryValue}&order=${orderValue}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        cache: "no-store", // Disable caching to force fresh fetch
-      });
+      const response = await fetch(
+        `/api/get-todos?category=${categoryValue}&order=${orderValue}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          cache: "no-store", // Disable caching to force fresh fetch
+        }
+      );
 
       if (response.status === 404) {
         console.error("API endpoint not found");
@@ -73,7 +76,7 @@ const AllTodos = ({ len }: { len?: number }) => {
     // Refetch whenever order and category change
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
-    refetchOnMount: false,    
+    refetchOnMount: false,
   });
 
   // Loading state
@@ -167,10 +170,20 @@ const AllTodos = ({ len }: { len?: number }) => {
             value={categoryValue}
             setValue={setCategoryValue}
           />
-          <OrderCommand value={orderValue} catVal={categoryValue} setValue={setOrderValue} />
-          <Button onClick={() => todosQuery.refetch()}>
+          <OrderCommand
+            value={orderValue}
+            catVal={categoryValue}
+            setValue={setOrderValue}
+          />
+          <Button
+            onClick={() => todosQuery.refetch()}
+            disabled={todosQuery.isFetching}
+            className={todosQuery.isFetching ? "cursor-wait" : ""}
+          >
             <div className="flex gap-1 items-center">
-              <span><Search className="w-5 h-5" /></span>
+              <span>
+                <Search className="w-5 h-5" />
+              </span>
               <h1>Search</h1>
             </div>
           </Button>
