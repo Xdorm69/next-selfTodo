@@ -2,7 +2,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CrossIcon, HandIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
 import HoverDiv from "./HoverDiv";
 
 const AnimatedImage = ({
