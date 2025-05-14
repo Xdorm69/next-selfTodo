@@ -19,20 +19,43 @@ import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "./ui/skeleton";
 import SkeletonWrapper from "./SkeletonWrapper";
+import { motion } from "motion/react";
 
-const CardComp = () => {
+const CardComp = ({
+  isHovered,
+  imgClicked,
+}: {
+  isHovered: boolean;
+  imgClicked: boolean;
+}) => {
   return (
-    <Card className="h-full shadow-lg">
-      <CardHeader>
-        <CardTitle className="text-xl font-bold">
-          Todo Status Overview
-        </CardTitle>
-        <CardDescription>Distribution of your todos by status</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <BarGraphChart />
-      </CardContent>
-    </Card>
+    <motion.div
+      transition={{
+        ease: "easeInOut",
+        type: "tween",
+        duration: 0.3,
+      }}
+      animate={
+        isHovered && imgClicked
+          ? { height: "80%", y: 100, transition: { duration: 0.3 } }
+          : { height: "100%", y: 0, transition: { duration: 0.3 } }
+      }
+      style={{ overflow: "hidden" }}
+    >
+      <Card className="shadow-lg h-full flex flex-col justify-between">
+        <CardHeader>
+          <CardTitle className="text-xl font-bold">
+            Todo Status Overview
+          </CardTitle>
+          <CardDescription>
+            Distribution of your todos by status
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <BarGraphChart />
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 };
 

@@ -1,14 +1,30 @@
+"use client";
+
 import { Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Loading() {
   return (
-    <div className="flex justify-center items-center min-h-screen bg-background">
-      <div className="text-center">
-        <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-primary" />
-        <p className="text-xl font-semibold text-gray-700">
-          Loading Zodos...
-        </p>
-      </div>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{
+          opacity: 1,
+          scale: 1,
+          rotate: 360,
+          transition: {
+            duration: 1,
+            repeat: Infinity,
+            repeatType: "loop",
+            ease: "linear",
+          },
+        }}
+      >
+        <Loader2
+          className="h-16 w-16 text-primary animate-spin"
+          strokeWidth={2.5}
+        />
+      </motion.div>
     </div>
   );
 }

@@ -15,7 +15,8 @@ import { TodoCard } from "./TodoCard";
 import { motion, Variants } from "framer-motion";
 import { CategoryCommandBox } from "./CategoryCommandBox";
 import { OrderCommand } from "./OrderCommand";
-import { Search } from "lucide-react";
+import { ChevronUp, Search } from "lucide-react";
+
 
 export type TodoType = {
   id: string;
@@ -82,13 +83,15 @@ const AllTodos = ({ len }: { len?: number }) => {
   // Loading state
   if (todosQuery.isLoading) {
     return (
-      <div className="space-y-3">
-        {[...Array(len || 3)].map((_, index) => (
-          <SkeletonWrapper key={index} isLoading={true} fullWidth={true}>
-            <Skeleton className="h-[200px] w-full rounded-xl" />
-          </SkeletonWrapper>
-        ))}
-      </div>
+      <>
+        <div className="space-y-3">
+          {[...Array(len || 3)].map((_, index) => (
+            <SkeletonWrapper key={index} isLoading={true} fullWidth={true}>
+              <Skeleton className="h-[200px] w-full rounded-xl" />
+            </SkeletonWrapper>
+          ))}
+        </div>
+      </>
     );
   }
 
@@ -163,6 +166,7 @@ const AllTodos = ({ len }: { len?: number }) => {
   // Todos rendering
   return (
     <>
+
       <h1 className="my-7 text-3xl font-semibold">
         <div>All Todos</div>
         <div className="flex mt-2 gap-2 items-center">
@@ -213,6 +217,43 @@ const AllTodos = ({ len }: { len?: number }) => {
           </motion.div>
         ))}
       </div>
+      {dataToRender.length > 6 && (
+        <div className="w-full flex justify-center items-center">
+          <motion.div
+            initial={{ y: 100, height: 50 }}
+            whileInView={{ y: 0 }}
+            whileHover={{
+              height: 140,
+              borderRadius: "50%",
+              transition: { duration: 0.3 },
+            }}
+            transition={{
+              type: "spring",
+              damping: 14,
+              stiffness: 500,
+              duration: 0.2,
+            }}
+          >
+            <Button
+              className="rounded-full w-full h-full my-14"
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            >
+              Scroll to top{" "}
+              <motion.div
+                animate={{ y: [-3, 3, -3] }}
+                transition={{
+                  duration: 1,
+                  repeatType: "loop",
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              >
+                <ChevronUp />
+              </motion.div>{" "}
+            </Button>
+          </motion.div>
+        </div>
+      )}
     </>
   );
 };

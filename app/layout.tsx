@@ -1,7 +1,7 @@
 import { type Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
-import { Montserrat, Work_Sans } from "next/font/google";
+import { Barlow, Montserrat, Work_Sans } from "next/font/google";
 import { Toaster } from "sonner";
 import RootProvider from "@/components/providers/RootProvider";
 
@@ -11,6 +11,13 @@ const montserrat = Montserrat({
   display: "swap",
   variable: "--font-montserrat",
 });
+
+const barlow = Barlow({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-barlow",
+});
+
 
 const worksans = Work_Sans({
   weight: ["400", "500", "700"],
@@ -53,7 +60,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body className="antialiased" suppressHydrationWarning>
-          <div className={`${montserrat.variable} ${worksans.variable}`}>
+          <div className={`${montserrat.variable} ${worksans.variable} ${barlow.className}`}>
             <RootProvider>{children}</RootProvider>
             <Toaster
               theme="dark"

@@ -74,7 +74,7 @@ export function TodoComboBox({ value, id }: { value: string; id: string }) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[180px] justify-between"
+          className="w-[180px] py-5 justify-between"
         >
           {value
             ? Options.find((option) => option.value === value)?.label

@@ -1,55 +1,58 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import CardComp from "./CardComp";
 import TotalTodoCard from "./TotalTodoCard";
-import Image from "next/image";
+import AnimatedImage from "./AnimatedImage";
+import { cn } from "@/lib/utils";
 
 const TodozTopBar = () => {
-  const baseAnimationProps = {
-    initial: { y: 50, opacity: 0 },
-    animate: { y: 0, opacity: 1 },
-  };
-
-  const animationProps = [
-    {
-      ...baseAnimationProps,
-      transition: { duration: 0.3, delay: 0.5 },
-    },
-    {
-      ...baseAnimationProps,
-      transition: { duration: 0.3, delay: 0.7 },
-    },
-    {
-      ...baseAnimationProps,
-      transition: { duration: 0.3, delay: 0.9 },
-    },
-  ];
+  const [imgClicked, setImgClicked] = useState<boolean>(false);
+  const [topHovered, setTopHovered] = useState<boolean>(false);
 
   return (
-    <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-      <motion.div className="col-span-1" {...animationProps[2]}>
+    <motion.div
+      layout
+      className={cn(
+        "w-full grid grid-cols-4 auto-rows-auto gap-4 relative overflow-hidden",
+        imgClicked && "max-h-[600px]"
+      )}
+    >
+      <motion.div
+      onMouseEnter={() => setTopHovered(true)}
+      onMouseLeave={() => setTopHovered(false)}
+      animate={imgClicked && topHovered ? {height: "140%"} : {height: "100%"}}
+        layout
+        className={cn(
+          "col-span-1 w-full h-full",
+          imgClicked && "col-span-1 row-start-1"
+        )}
+      >
         <TotalTodoCard />
       </motion.div>
 
-      <motion.div className="col-span-1" {...animationProps[1]}>
-        <CardComp />
+      <motion.div
+        layout        
+        className={cn(
+          "col-span-1 w-full",
+          imgClicked && "col-span-1 row-start-2"
+        )}
+      >
+        <CardComp isHovered={topHovered} imgClicked={imgClicked} />
       </motion.div>
 
       <motion.div
-        className="w-full h-[330px] md:col-span-2 lg:col-span-1 xl:col-span-2 bg-white rounded-lg shadow-lg overflow-hidden"
-        {...animationProps[0]}
+        layout
+        className={cn(
+          "w-full bg-card rounded-lg shadow-lg overflow-hidden duration-300",
+          imgClicked
+            ? "col-span-3 row-span-2 h-[600px]"
+            : "col-span-2 h-[330px]"
+        )}
       >
-        <Image
-          src={"/0.jpg"}
-          alt="hero-img"
-          width={1000}
-          priority
-          height={800}
-          className="w-full h-full object-cover"
-        />
+        <AnimatedImage value={imgClicked} setValue={setImgClicked} />
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
 

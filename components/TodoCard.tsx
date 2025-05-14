@@ -12,21 +12,20 @@ import { TodoComboBox } from "./TodoComboBox";
 import { Button } from "./ui/button";
 import { ConfirmTodoDelete } from "./ConfirmTodoDelete";
 import AddTodo from "./AddTodo";
+import { SeeMoreHover } from "./SeeMoreHover";
 
 export const TodoCard = ({ i }: { i: TodoType }) => {
-    
-
-
   return (
     <SkeletonWrapper key={i.id} isLoading={false}>
       <Card
         className={cn(
+          "flex flex-col h-full",
           i.status === "completed"
-            ? "bg-gradient-to-b from-transparent to-emerald-900 border-t-0"
-            : "bg-gradient-to-b from-transparent to-amber-900 border-t-0"
+            ? "bg-gradient-to-b from-card/80 to-emerald-900/80"
+            : "bg-gradient-to-b from-card/80 to-amber-900/80"
         )}
       >
-        <CardHeader>
+        <CardHeader className="flex-shrink-0">
           <CardTitle className=" w-full">
             <div className="w-full flex justify-between items-center">
               <div className="text-2xl">{i.title}</div>
@@ -41,26 +40,22 @@ export const TodoCard = ({ i }: { i: TodoType }) => {
             </div>
           </CardTitle>
         </CardHeader>
-        <CardContent
-          className="w-1/2 overflow-y-auto max-h-[200px] h-fit 
-          scrollbar-thin scrollbar-track-transparent scrollbar-thumb-primary/50 
-          hover:scrollbar-thumb-primary/80 transition-all duration-300 
-          scrollbar-thumb-rounded-full pr-2"
-        >
-          {i.description}
+        <CardContent className="flex-grow line-clamp-3 text-muted-foreground">
+          <div className="text-muted-foreground line-clamp-3">
+            {i.description.length > 75 ? `${i.description.slice(0, 75)}...` : i.description}
+          </div>
+
+          <SeeMoreHover data={i} />
         </CardContent>
-        <CardFooter className="flex gap-2 w-full justify-end">
-          <div className="w-fit">
+        <CardFooter className="flex-shrink-0 mt-auto ">
+          <div className="flex items-center justify-between w-full">
             <TodoComboBox value={i.status} id={i.id} />
-            <div className="flex w-full justify-between items-center mt-3 gap-2">
+            <div className="flex items-center gap-2">
               <AddTodo data={i} />
               <ConfirmTodoDelete
-              id={i.id}
+                id={i.id}
                 trigger={
-                  <Button
-                  className="py-5 font-semibold"
-                    variant={"ghostDel"}                    
-                  >
+                  <Button className="py-5 font-semibold" variant={"ghostDel"}>
                     Delete
                   </Button>
                 }

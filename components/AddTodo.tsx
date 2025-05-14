@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -21,12 +21,29 @@ const AddTodo = ({ data }: { data?: TodoType }) => {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
 
-  const [formData, setFormData] = useState({
-    id: data?.id || "",
-    title: data?.title || "",
-    description: data?.description || "",
-    status: data?.status || "pending",
-  });
+  const defaultFormData = {
+    id: "",
+    title: "",
+    description: "",
+    status: "pending",
+  };
+
+  const [formData, setFormData] = useState(
+    data
+      ? {
+          id: data?.id || "",
+          title: data?.title || "",
+          description: data?.description || "",
+          status: data?.status || "pending",
+        }
+      : defaultFormData
+  );
+
+  useEffect(() => {
+    if (open && !data) {
+      setFormData(defaultFormData);
+    }
+  }, [open, data]);
 
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
@@ -34,7 +51,7 @@ const AddTodo = ({ data }: { data?: TodoType }) => {
         id: formData.id,
         title: formData.title,
         description: formData.description,
-        status: formData.status,
+        status: formData.status as "completed" | "pending",
       });
       return result;
     },
